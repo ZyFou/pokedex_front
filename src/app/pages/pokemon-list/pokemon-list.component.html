@@ -1,6 +1,5 @@
-<h1>Liste des pokemons</h1>
-<section>
+<section class="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
     @for (pokemon of pokemonList?.data; track pokemon.id){
-    <p>{{ pokemon.name }}</p>
+    <app-pokemon-card [pokemon]="pokemon"></app-pokemon-card>
     }
 </section>
