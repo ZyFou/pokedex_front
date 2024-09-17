@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {ApiService} from "./shared/services/api.service";
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,13 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'pokedex_front';
+  title = 'pokedex-front';
+
+  constructor(
+    public apiService: ApiService,
+  ) {
+    this.apiService.requestApi('/pokemon').then((pokemons) => {
+      console.log(pokemons);
+    });
+  }
 }
