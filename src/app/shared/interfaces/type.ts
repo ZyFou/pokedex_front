@@ -4,5 +4,8 @@ export interface Type {
   name: string;
   pivot: {
     slot: number;
-  }
+  };
+  icon: string;
+  icon_dark: string;
+  color: string;
 }
