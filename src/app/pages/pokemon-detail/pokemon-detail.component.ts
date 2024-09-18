@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import {Pokemon} from "../../shared/interfaces/pokemon";
 import {ApiService} from "../../shared/services/api.service";
 import {ActivatedRoute} from "@angular/router";
+
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-pokemon-detail',
@@ -11,6 +14,10 @@ import {ActivatedRoute} from "@angular/router";
 export class PokemonDetailComponent {
 
   pokemon!: Pokemon;
+
+  fa = {
+    faChevronLeft
+  }
 
   constructor(
     private apiService: ApiService,
@@ -27,4 +34,17 @@ export class PokemonDetailComponent {
       }
     });
   }
+
+  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
+  playCry(cryUrl: string | undefined) {
+  if (cryUrl) {
+    const audio = this.audioPlayer.nativeElement;
+    audio.src = cryUrl;
+    audio.load();
+    audio.play();
+  } else {
+    console.error('Aucun fichier audio disponible pour ce Pokémon.');
+  }
+}
+
 }
