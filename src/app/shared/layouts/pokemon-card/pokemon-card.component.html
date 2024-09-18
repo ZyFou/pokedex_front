@@ -9,8 +9,11 @@
 
     <div class="flex flex-col justify-center">
         <p>{{ pokemon.name }}</p>
-        @for (type of pokemon.default_variety.types; track type.id){
-        <img [src]="type.sprite_url" [alt]="type.name" class="h-6">
-        }
+        <div class="flex">
+            @if(pokemon.default_variety.types){
+            <app-type-badge [types]="pokemon.default_variety.types"></app-type-badge>
+            }
+        </div>
     </div>
+
 </div>

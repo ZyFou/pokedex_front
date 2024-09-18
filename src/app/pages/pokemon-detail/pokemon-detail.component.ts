@@ -7,7 +7,6 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { faVolumeLow } from '@fortawesome/free-solid-svg-icons';
 
 
-
 @Component({
   selector: 'app-pokemon-detail',
   templateUrl: './pokemon-detail.component.html',

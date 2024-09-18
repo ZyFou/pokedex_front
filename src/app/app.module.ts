@@ -7,14 +7,16 @@ import {provideHttpClient} from "@angular/common/http";
 import { PokemonListComponent } from './pages/pokemon-list/pokemon-list.component';
 import { PokemonCardComponent } from './shared/layouts/pokemon-card/pokemon-card.component';
 import { PokemonDetailComponent } from './pages/pokemon-detail/pokemon-detail.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'; // Import du provider
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TypeBadgeComponent } from './shared/layouts/type-badge/type-badge.component'; // Import du provider
 
 @NgModule({
   declarations: [
     AppComponent,
     PokemonListComponent,
     PokemonCardComponent,
-    PokemonDetailComponent
+    PokemonDetailComponent,
+    TypeBadgeComponent
   ],
   imports: [
     BrowserModule,

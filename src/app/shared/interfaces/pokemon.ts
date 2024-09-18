@@ -1,4 +1,4 @@
-import {PokemonVariety} from "./pokemon-variety";
+import { PokemonVariety } from "./pokemon-variety";
 
 export interface Pokemon {
     category: string;
