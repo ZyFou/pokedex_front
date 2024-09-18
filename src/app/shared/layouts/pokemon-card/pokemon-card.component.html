@@ -1,4 +1,4 @@
-<div class="card clickable">
+<div class="card clickable" [ngStyle]="{ 'background': getBackgroundStyle(pokemon) }">
     <div>
         <p class="opacity-40">#{{ pokemon.id }}</p>
     </div>
