@@ -1,6 +1,8 @@
 <div class="flex flex-row  gap-3 justify-center">
     @for (type of types; track type.id){
     <!-- <img [src]="type.sprite_url" [alt]="type.name" class="h-6"> -->
-    <p>{{type.id}}</p>
+    <!-- <p>{{type.id}}</p> -->
+    <img src={{type.icon}} class="h-6">
+
     }
 </div>
