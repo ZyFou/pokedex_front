@@ -10,7 +10,7 @@ describe('PokemonDetailComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [PokemonDetailComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(PokemonDetailComponent);
     component = fixture.componentInstance;

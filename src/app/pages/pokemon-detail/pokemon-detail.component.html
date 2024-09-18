@@ -1,23 +1,36 @@
 @if (pokemon){
-<div class="">
+<div class="mx-5 my-5">
     <a [routerLink]="['/']" class="btn btn-circle btn-primary mr-2">
         <fa-icon [icon]="fa.faChevronLeft" class="text-2xl text-green-400"></fa-icon>
     </a>
     <h1 class="flex items-center mb-6 text-2xl font-bold">
         {{pokemon.name}}
-        #{{pokemon.id}}
+        <!-- #{{pokemon.id}} -->
     </h1>
 </div>
 
 <div class="flex items-center justify-center p-4 relative">
-    <img [src]="pokemon.default_variety.sprites?.artwork_url" [alt]="pokemon.name" class="w-full max-w-md">
+
     <div class="absolute top-0 left-0 p-4 flex flex-col gap-2">
         @for (type of pokemon.default_variety.types; track type.id){
         <img [src]="type.sprite_url" [alt]="type.name" class="h-6">
         }
     </div>
+    <div class="flex justify-center">
+        <img [src]="pokemon.default_variety.sprites?.artwork_url" [alt]="pokemon.name" class="w-1/4 max-w-md">
+    </div>
+
 </div>
-<div class="flex items-center justify-center gap-3">
+
+<!-- This will be moved into a separate component -->
+<div class="flex justify-center">
+    <button (click)="playCry(pokemon.default_variety.cry_url)"
+        class="bg-white hover:bg-green-100 text-gray-800 font-semibold py-2 px-4 border border-green-400 rounded-full shadow ease-in duration-300">
+        <fa-icon [icon]="fa.faVolumeLow" class="text-2xl text-green-400"></fa-icon>
+    </button>
+</div>
+
+<!-- <div class="flex items-center justify-center gap-3">
     <img [src]="pokemon.default_variety.sprites?.front_url" alt="front sprite"
         class="h-24 w-24 p-1 bg-neutral rounded-lg">
     <img [src]="pokemon.default_variety.sprites?.front_shiny_url" alt="front sprite shiny"
@@ -26,13 +39,7 @@
         class="h-24 w-24 p-1 bg-neutral rounded-lg">
     <img [src]="pokemon.default_variety.sprites?.back_shiny_url" alt="back sprite shiny"
         class="h-24 w-24 p-1 bg-neutral rounded-lg">
-
-    <button (click)="playCry(pokemon.default_variety.cry_url)"
-        class="bg-white hover:bg-green-100 text-gray-800 font-semibold py-2 px-4 border border-green-400 rounded-full shadow ease-in duration-300">
-        <img src="assets/svg/sound_icon.svg" alt="Play Cry" class="w-6 h-6">
-    </button>
-</div>
-
+</div> -->
 
 <audio #audioPlayer></audio>
 }
