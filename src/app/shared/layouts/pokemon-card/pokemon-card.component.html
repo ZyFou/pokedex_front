@@ -1,19 +1,17 @@
-<div class="card clickable" [ngStyle]="{ 'background': getBackgroundStyle(pokemon) }">
-    <div>
-        <p class="opacity-40">#{{ pokemon.id }}</p>
+<div class="card bg-white">
+    <div class="rounded-xl" [ngStyle]="{ 'background': getBackgroundStyle(pokemon) }">
+        <p class=" text-white pl-4 pt-2 font-bold">#{{ pokemon.id.toString().padStart(4, '0') }}</p>
+        <div class="flex flex-col justify-center items-center gap-3">
+            <img [src]="pokemon.default_variety.sprites?.artwork_url" [alt]="pokemon.name" class="w-1/2 max-w-md">
+        </div>
     </div>
-    <div class="flex flex-col justify-center items-center gap-3">
 
-        <img [src]="pokemon.default_variety.sprites?.artwork_url" [alt]="pokemon.name" class="w-1/2 max-w-md">
-    </div>
-
-    <div class="flex flex-col justify-center">
-        <p>{{ pokemon.name }}</p>
+    <div class="flex flex-col justify-center bg-white px-4 rounded-xl pb-3">
+        <p class="font-bold">{{ pokemon.name }}</p>
         <div class="flex">
             @if(pokemon.default_variety.types){
             <app-type-badge [types]="pokemon.default_variety.types"></app-type-badge>
             }
         </div>
     </div>
-
 </div>

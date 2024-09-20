@@ -3,11 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body{
+  background:#FFF8E9;
+}
 
 .card{
-  @apply bg-green-200 shadow-md rounded-lg p-4 border border-zinc-400 transition-colors;
-
-  &.clickable:hover{
-    @apply border-zinc-700 bg-green-300;
-  }
+  @apply shadow-md shadow-green-200 rounded-xl transition-colors;
 }
