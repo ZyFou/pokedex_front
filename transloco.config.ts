@@ -1,16 +1,16 @@
-import {TranslocoGlobalConfig} from '@jsverse/transloco-utils';
-    
+import { TranslocoGlobalConfig } from '@jsverse/transloco-utils';
+
 const config: TranslocoGlobalConfig = {
-  rootTranslationsPath: 'src/assets/i18n/',
+  rootTranslationsPath: 'public/assets/i18n/', // <- here
   langs: [
     'ja-hrkt', 'ja-roj',
-    'ko',      'zh-hans',
+    'ko', 'zh-hans',
     'zh-hant', 'fr',
-    'de',      'es',
-    'is',      'en',
+    'de', 'es',
+    'is', 'en',
     'cs'
   ],
   keysManager: {}
 };
-    
+
 export default config;
