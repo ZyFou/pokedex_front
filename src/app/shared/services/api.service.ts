@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {FormGroup} from "@angular/forms";
-import {Observable} from "rxjs";
-import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
-import {environment} from "../../../environments/environment";
+import { FormGroup } from "@angular/forms";
+import { Observable } from "rxjs";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +50,7 @@ export class ApiService {
     }
 
     //si le formulaire est passé en paramètre on le met en pending
-    if(form){
+    if (form) {
       form.markAsPending();
     }
 
@@ -59,9 +59,9 @@ export class ApiService {
       req.subscribe({
         //si la requête est un succès
         next: (data) => {
-          if (form){
+          if (form) {
             form.enable();
-            if(data.message){
+            if (data.message) {
               this.setFormAlert(form, data.message, 'success');
             }
           }
@@ -69,15 +69,15 @@ export class ApiService {
           return data;
         },
         //si la requête est un échec
-        error : (error: HttpErrorResponse) => {
+        error: (error: HttpErrorResponse) => {
 
           console.log('Http Error : ', error);
-          if(form){
+          if (form) {
             form.enable();
             if (error.error.message) {
               this.setFormAlert(form, error.error.message, 'error');
 
-              if(error.error.errors){
+              if (error.error.errors) {
                 // On parcourt les erreurs pour les affecter aux champs du formulaire concernés
                 Object.entries(error.error.errors).forEach((entry: [string, any]) => {
                   const [key, value] = entry;
@@ -88,12 +88,12 @@ export class ApiService {
                     control = control.controls[keys[j]];
                   }
 
-                  if(control) {
-                    if(typeof value === 'string'){
-                      control.setErrors({serverError: value});
-                    }else{
+                  if (control) {
+                    if (typeof value === 'string') {
+                      control.setErrors({ serverError: value });
+                    } else {
                       for (let i = 0; i < value.length; i++) {
-                        control.setErrors({serverError: value[i]});
+                        control.setErrors({ serverError: value[i] });
                       }
                     }
                   }
@@ -115,19 +115,28 @@ export class ApiService {
   }
 
   //fonction pour ajouter les paramètres à une url
-  applyQueryParams(url: string, datas: any){
+  applyQueryParams(url: string, datas: any) {
     return url + '?' + Object.keys(datas).map((key) => {
       return key + '=' + datas[key];
     }).join('&');
   }
 
   //fonction pour afficher une alerte sur un formulaire
-  setFormAlert(form: FormGroup, message: string, status: 'success' | 'error' | 'warning' | 'info' = 'success'){
+  setFormAlert(form: FormGroup, message: string, status: 'success' | 'error' | 'warning' | 'info' = 'success') {
     form.setErrors({
-      serverError : {
+      serverError: {
         status: status,
         message: message
       }
     })
+  }
+
+  public async getPokemonMoves(pokemonId: number): Promise<any> {
+    return this.requestApi(`/pokemon/${pokemonId}/moves`, 'GET');
+  }
+
+  // Pour obtenir les détails du move
+  public async getMoveDetails(moveId: number): Promise<any> {
+    return this.requestApi(`/move/${moveId}`, 'GET');
   }
 }

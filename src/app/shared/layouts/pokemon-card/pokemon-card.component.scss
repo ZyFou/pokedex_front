@@ -1,0 +1,9 @@
+.pokemon-image {
+    width: 75%; 
+    object-fit: cover; 
+    transition: transform 0.3s ease;
+}
+
+.pokemon-image:hover {
+    transform: scale(1.1);
+}

@@ -1,47 +1,73 @@
-@if (pokemon){
-<div class="mx-5 my-5">
-    <a [routerLink]="['/']" class="btn btn-circle btn-primary mr-2">
-        <fa-icon [icon]="fa.faChevronLeft" class="text-2xl text-green-400"></fa-icon>
+@if (pokemon) {
+<!-- Header avec image du Pokémon dans un carré avec bord arrondi en bas -->
+<div class="header-container relative" [ngStyle]="{ 'background': getBackgroundStyle(pokemon) }">
+    <!-- Bouton retour en haut à gauche -->
+    <a [routerLink]="['/']" class="btn btn-circle btn-primary absolute top-4 left-4 z-10">
+        <fa-icon [icon]="fa.faChevronLeft" class="text-2xl text-white"></fa-icon>
     </a>
-    <h1 class="flex items-center mb-6 text-2xl font-bold">
-        {{pokemon.name}}
-        <!-- #{{pokemon.id}} -->
-    </h1>
-</div>
 
-<div class="flex items-center justify-center p-4 relative">
+    <!-- Nom du Pokémon et numéro en haut, sous le bouton retour -->
+    <div class="pokemon-header-container absolute top-12 inset-x-0 flex justify-between items-center z-10 px-4">
+        <!-- Nom du Pokémon à gauche -->
+        <div class="flex flex-col">
+            <h1 class="header-title text-white">
+                {{ pokemon.name }}
+            </h1>
+            <!-- Types du Pokémon, alignés à gauche -->
+            <div class="flex">
+                <app-type-badge [types]="pokemon.default_variety.types ?? []"></app-type-badge>
+            </div>
+        </div>
 
-    <div class="absolute top-0 left-0 p-4 flex flex-col gap-2">
-        @if(pokemon.default_variety.types){
-        <app-type-badge [types]="pokemon.default_variety.types"></app-type-badge>
-        }
+        <!-- Numéro du Pokémon à droite -->
+        <h2 class="header-title pokemon-id text-white">
+            #{{ pokemon.id.toString().padStart(4, '0') }}
+        </h2>
     </div>
 
 
-    <div class="flex justify-center">
-        <img [src]="pokemon.default_variety.sprites?.artwork_url" [alt]="pokemon.name" class="w-1/4 max-w-md">
-    </div>
+    <!-- Types du Pokémon en dessous du nom -->
 
+
+    <!-- Image du Pokémon au centre -->
+    <div class="pokemon-image-container absolute inset-0 flex justify-center items-center">
+        <img [src]="pokemon.default_variety.sprites?.artwork_url" [alt]="pokemon.name" class="pokemon-image z-0">
+    </div>
 </div>
 
-<!-- This will be moved into a separate component -->
-<div class="flex justify-center">
-    <button (click)="playCry(pokemon.default_variety.cry_url)"
-        class="bg-white hover:bg-green-100 text-gray-800 font-semibold py-2 px-4 border border-green-400 rounded-full shadow ease-in duration-300">
-        <fa-icon [icon]="fa.faVolumeLow" class="text-2xl text-green-400"></fa-icon>
+<!-- Section principale : détails du Pokémon -->
+<div class="main-container flex flex-col items-center gap-4 mt-6">
+    <!-- Taille et poids -->
+    <div class="pokemon-info text-center">
+        <p>Taille : {{ pokemon.default_variety.height / 10 }} m</p>
+        <p>Poids : {{ pokemon.default_variety.weight / 10 }} kg</p>
+    </div>
+
+    <!-- Bouton pour jouer le cri -->
+    <button (click)="playCry(pokemon.default_variety.cry_url)" class="cry-btn" [ngStyle]="{ 
+            'border-color': getTypeColor(pokemon), 
+            'color': getTypeColor(pokemon) 
+        }">
+        <fa-icon [icon]="fa.faVolumeLow" class="text-2xl" [ngStyle]="{ 'color': getTypeColor(pokemon) }">
+        </fa-icon>
     </button>
+
 </div>
 
-<!-- <div class="flex items-center justify-center gap-3">
-    <img [src]="pokemon.default_variety.sprites?.front_url" alt="front sprite"
-        class="h-24 w-24 p-1 bg-neutral rounded-lg">
-    <img [src]="pokemon.default_variety.sprites?.front_shiny_url" alt="front sprite shiny"
-        class="h-24 w-24 p-1 bg-neutral rounded-lg">
-    <img [src]="pokemon.default_variety.sprites?.back_url" alt="back sprite"
-        class="h-24 w-24 p-1 bg-neutral rounded-lg">
-    <img [src]="pokemon.default_variety.sprites?.back_shiny_url" alt="back sprite shiny"
-        class="h-24 w-24 p-1 bg-neutral rounded-lg">
-</div> -->
+<div class="pokemon-moves mt-8 p-6 bg-gray-100 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Moves THIS IS BROKEN NEED TO FIX SOON</h2>
+    <ul class="space-y-2">
+        <li *ngFor="let move of pokemonMoves" class="flex items-center bg-white p-4 rounded-lg shadow-md">
+            <div
+                class="flex-shrink-0 w-10 h-10 rounded-full bg-gray-200 text-white flex items-center justify-center mr-4">
+                <img [src]="moveIcons[move.type_id]" alt="Move Icon" class="w-6 h-6">
+            </div>
+            <span class="text-lg font-medium text-gray-900">{{ move.name[3].name }}</span>
+        </li>
+    </ul>
+</div>
 
+
+<!-- Audio player -->
 <audio #audioPlayer></audio>
 }

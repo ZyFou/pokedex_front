@@ -3,11 +3,16 @@
 </div>
 
 <section class="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-    @for (pokemon of pokemonList?.data; track pokemon.id){
-
-    <a [routerLink]="['/pokemon/'+pokemon.id]">
-        <app-pokemon-card [pokemon]="pokemon"></app-pokemon-card>
-    </a>
-
-    }
+    <ng-container *ngFor="let pokemon of pokemonList?.data">
+        <a [routerLink]="['/pokemon/' + pokemon.id]">
+            <app-pokemon-card [pokemon]="pokemon"></app-pokemon-card>
+        </a>
+    </ng-container>
 </section>
+
+<!-- Div caché pour activer l'infinite scroll -->
+<div #scrollAnchor></div>
+
+<!-- <div *ngIf="isLoading" class="flex justify-center">
+    <p>Chargement...</p>
+</div> -->

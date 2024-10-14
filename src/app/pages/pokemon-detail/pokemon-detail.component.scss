@@ -1,0 +1,75 @@
+/* Header avec image et bord arrondi en bas */
+.header-container {
+  height: 50vh; /* Prend tout le haut de l'écran */
+  width: 100%;
+  position: relative;
+  border-bottom-left-radius: 50% 20%; /* Bord arrondi en bas */
+  border-bottom-right-radius: 50% 20%;
+  overflow: hidden;
+}
+
+/* Bouton retour */
+.return-btn {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  padding: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.return-btn:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Titre centré avec le numéro */
+.header-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.pokemon-id {
+  font-size: 18px;
+  margin-left: 10px;
+}
+
+/* Image du Pokémon */
+.pokemon-image-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pokemon-image {
+  max-width: 50%;
+  max-height: 50%;
+  object-fit: contain;
+}
+
+/* Section principale pour les détails */
+.main-container {
+  margin-top: 20px;
+  padding: 16px;
+}
+
+.pokemon-info p {
+  font-size: 18px;
+  color: #333;
+}
+
+/* Bouton du cri */
+.cry-btn {
+  background-color: #fff;
+  border: 2px solid #5cf480;
+  color: #28a745;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.cry-btn:hover {
+  background-color: #f1f1f1;
+}

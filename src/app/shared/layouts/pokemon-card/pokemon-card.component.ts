@@ -8,6 +8,7 @@ import { Pokemon } from "../../interfaces/pokemon";
 })
 export class PokemonCardComponent {
         @Input() pokemon!: Pokemon;
+
         getBackgroundStyle(pokemon: any): string {
                 const types = pokemon.default_variety.types;
 
@@ -22,6 +23,13 @@ export class PokemonCardComponent {
 
                 // Si pas de types (dans le cas improbable), retour à une couleur par défaut
                 return 'linear-gradient(45deg, #FFFFFF, #FFFFFF)';
+        }
+
+        getShadowStyle(pokemon: any): string {
+                const types = pokemon.default_variety.types;
+
+                const primaryColor = types[0].color;
+                return `0 4px 6px -1px ${primaryColor}, 0 2px 4px -1px ${primaryColor}`;
         }
 }
 

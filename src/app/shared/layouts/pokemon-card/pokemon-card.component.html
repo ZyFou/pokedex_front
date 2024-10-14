@@ -1,8 +1,8 @@
-<div class="card bg-white">
-    <div class="rounded-xl" [ngStyle]="{ 'background': getBackgroundStyle(pokemon) }">
+<div class="shadow-md rounded-xl transition-colors bg-white" [ngStyle]="{ 'box-shadow': getShadowStyle(pokemon) }">
+    <div class="rounded-xl relative" [ngStyle]="{ 'background': getBackgroundStyle(pokemon) }">
         <p class=" text-white pl-4 pt-2 font-bold">#{{ pokemon.id.toString().padStart(4, '0') }}</p>
-        <div class="flex flex-col justify-center items-center gap-3">
-            <img [src]="pokemon.default_variety.sprites?.artwork_url" [alt]="pokemon.name" class="w-1/2 max-w-md">
+        <div class="flex flex-col justify-center items-center gap-3 relative pokemon-image-container">
+            <img [src]="pokemon.default_variety.sprites?.artwork_url" [alt]="pokemon.name" class="pokemon-image">
         </div>
     </div>
 
