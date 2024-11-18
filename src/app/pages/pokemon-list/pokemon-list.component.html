@@ -2,17 +2,26 @@
     <h1 class="text-4xl font-bold">Pokedex</h1>
 </div>
 
-<section class="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-    <ng-container *ngFor="let pokemon of pokemonList?.data">
+<div class="flex justify-center mb-6 sticky top-5 z-10 ">
+    <input type="text" class="border rounded-lg p-2 w-full max-w-md shadow-md" placeholder="Rechercher un Pokémon"
+        [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+</div>
+
+
+<!-- Résultats filtrés par recherche -->
+<section *ngIf="filteredPokemon && filteredPokemon.length > 0"
+    class="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <ng-container *ngFor="let pokemon of filteredPokemon">
         <a [routerLink]="['/pokemon/' + pokemon.id]">
             <app-pokemon-card [pokemon]="pokemon"></app-pokemon-card>
         </a>
     </ng-container>
 </section>
 
-<!-- Div caché pour activer l'infinite scroll -->
-<div #scrollAnchor></div>
+<!-- Message si aucun résultat trouvé -->
+<section *ngIf="filteredPokemon?.length === 0 && searchTerm" class="text-center">
+    <p>Aucun Pokémon trouvé pour "{{ searchTerm }}".</p>
+</section>
 
-<!-- <div *ngIf="isLoading" class="flex justify-center">
-    <p>Chargement...</p>
-</div> -->
+<!-- Div cachée pour activer l'infinite scroll -->
+<div #scrollAnchor></div>

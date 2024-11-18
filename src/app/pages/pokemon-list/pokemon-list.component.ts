@@ -6,58 +6,79 @@ import { Pokemon } from "../../shared/interfaces/pokemon";
 @Component({
   selector: 'app-pokemon-list',
   templateUrl: './pokemon-list.component.html',
-  styleUrls: ['./pokemon-list.component.scss'], // Correction de "styleUrl" en "styleUrls"
+  styleUrls: ['./pokemon-list.component.scss'],
 })
 export class PokemonListComponent implements AfterViewInit {
+  pokemonList?: Paginate<Pokemon>; // Pagination des Pokémon
+  filteredPokemon: Pokemon[] = []; // Liste des Pokémon affichés
+  searchTerm: string = ''; // Terme de recherche
+  currentPage: number = 1; // Commencer à la page 1
+  isLoading = false; // Indicateur de chargement
+  loadedPokemonIds: Set<number> = new Set(); // IDs des Pokémon déjà chargés pour éviter les doublons
 
-  pokemonList?: Paginate<Pokemon>;
-  @ViewChild('scrollAnchor') scrollAnchor!: ElementRef; // Référence à l'ancre de scroll
-  isLoading = false; // Indicateur pour éviter les requêtes simultanées
+  @ViewChild('scrollAnchor') scrollAnchor!: ElementRef;
 
   constructor(
     public apiService: ApiService,
-  ) {
-    this.loadNextPokemonPage(); // Charge initialement la première page
-  }
+  ) { }
 
   ngAfterViewInit() {
-    // Créer l'observer pour détecter le bas de la page
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && !this.isLoading) {
-        this.loadNextPokemonPage(); // Charge plus de Pokémon si on est en bas
+        this.loadNextPokemonPage(); // Charger les Pokémon suivants au défilement
       }
     }, {
-      rootMargin: '200px', // Seuil de détection pour activer le chargement plus tôt
+      rootMargin: '200px', // Seuil avant de charger plus de Pokémon
     });
 
-    // Observer l'élément d'ancre
     if (this.scrollAnchor) {
       observer.observe(this.scrollAnchor.nativeElement);
     }
   }
 
-  // Fonction pour charger la page suivante des pokémons
+  // Charger les pages suivantes de Pokémon
   loadNextPokemonPage() {
-    // On crée le numéro de la page à charger
-    let page = this.pokemonList ? this.pokemonList.current_page + 1 : 1;
+    // Bloquer le chargement si une recherche est en cours
+    if (this.searchTerm.trim().length > 0 || this.isLoading || (this.pokemonList && this.currentPage > this.pokemonList.last_page)) {
+      return;
+    }
 
-    // Charger la page suivante si on n'a pas atteint la dernière page
-    if (!this.pokemonList || this.pokemonList.current_page < this.pokemonList.last_page) {
-      this.isLoading = true; // Indique que le chargement est en cours
-      this.apiService.requestApi('/pokemon', 'GET', { page }).then((pokemons: Paginate<Pokemon>) => {
-        // On ajoute les pokémons à la liste existante
-        if (!this.pokemonList) {
-          this.pokemonList = pokemons;
-        } else {
-          // Concatène les nouvelles données
-          let datas = this.pokemonList.data.concat(pokemons.data);
-          this.pokemonList = { ...pokemons, data: datas };
-        }
-        this.isLoading = false; // Réinitialise l'état de chargement
-      }).catch(error => {
-        console.error("Erreur lors du chargement des Pokémon : ", error);
-        this.isLoading = false; // Réinitialise l'état de chargement même en cas d'erreur
-      });
+    this.isLoading = true;
+
+    this.apiService.requestApi('/pokemon', 'GET', { page: this.currentPage }).then((pokemons: Paginate<Pokemon>) => {
+      if (!this.pokemonList) {
+        this.pokemonList = pokemons; // Initialiser la liste de Pokémon
+      } else {
+        // Ajouter uniquement les Pokémon uniques (éviter les doublons)
+        const uniquePokemons = pokemons.data.filter(pokemon => !this.loadedPokemonIds.has(pokemon.id));
+        this.pokemonList.data = [...this.pokemonList.data, ...uniquePokemons];
+        uniquePokemons.forEach(pokemon => this.loadedPokemonIds.add(pokemon.id));
+      }
+
+      this.currentPage++; // Passer à la page suivante
+      this.applySearchFilter(); // Appliquer le filtre de recherche
+      this.isLoading = false;
+    }).catch(error => {
+      console.error('Erreur lors du chargement des Pokémon :', error);
+      this.isLoading = false;
+    });
+  }
+
+
+  // Mise à jour de la recherche
+  onSearchChange() {
+    this.applySearchFilter(); // Filtrer les Pokémon en fonction de la recherche
+  }
+
+  // Applique le filtre de recherche sur la liste complète
+  applySearchFilter() {
+    if (this.searchTerm.length > 0 && this.pokemonList?.data) {
+      const term = this.searchTerm.toLowerCase();
+      this.filteredPokemon = this.pokemonList.data.filter(pokemon =>
+        pokemon.name.toLowerCase().includes(term)
+      );
+    } else {
+      this.filteredPokemon = this.pokemonList?.data || []; // Afficher tous les Pokémon si pas de recherche
     }
   }
 }
