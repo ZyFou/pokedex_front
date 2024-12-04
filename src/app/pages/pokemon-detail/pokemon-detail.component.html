@@ -1,73 +1,148 @@
 @if (pokemon) {
-<!-- Header avec image du Pokémon dans un carré avec bord arrondi en bas -->
-<div class="header-container relative" [ngStyle]="{ 'background': getBackgroundStyle(pokemon) }">
-    <!-- Bouton retour en haut à gauche -->
-    <a [routerLink]="['/']" class="btn btn-circle btn-primary absolute top-4 left-4 z-10">
-        <fa-icon [icon]="fa.faChevronLeft" class="text-2xl text-white"></fa-icon>
-    </a>
+<!-- Conteneur principal en grille -->
+<header class="header py-4 shadow-md" [ngStyle]="{ 'background': getBackgroundStyle(pokemon) }">
+    <h1 class="text-3xl font-bold text-center text-white">
+        {{ pokemon.name }} #{{ pokemon.id.toString().padStart(4, '0') }}
+    </h1>
+</header>
+<div class="container mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Colonne gauche : Pokémon et Description -->
+    <div class="col-span-1 flex flex-col gap-6">
+        <!-- Pokémon -->
+        <div class="pokemon-card p-6 rounded-lg shadow-lg flex items-center justify-between"
+            [ngStyle]="{ 'background': getBackgroundStyle(pokemon) }">
+            <!-- Section gauche : Taille et Poids -->
+            <div class="pokemon-info text-left">
+                <div class="bg-white px-5 rounded-full mb-2">
+                    <p class="text-lg font-medium">Poids : {{ pokemon.default_variety.weight / 10 }} kg</p>
+                </div>
+                <div class="bg-white px-5 rounded-full">
+                    <p class="text-lg font-medium">Taille : {{ pokemon.default_variety.height / 10 }} m</p>
+                </div>
+            </div>
 
-    <!-- Nom du Pokémon et numéro en haut, sous le bouton retour -->
-    <div class="pokemon-header-container absolute top-12 inset-x-0 flex justify-between items-center z-10 px-4">
-        <!-- Nom du Pokémon à gauche -->
-        <div class="flex flex-col">
-            <h1 class="header-title text-white">
-                {{ pokemon.name }}
-            </h1>
-            <!-- Types du Pokémon, alignés à gauche -->
-            <div class="flex">
-                <app-type-badge [types]="pokemon.default_variety.types ?? []"></app-type-badge>
+            <!-- Section droite : Image du Pokémon -->
+            <div class="pokemon-image">
+                <img [src]="pokemon.default_variety.sprites?.artwork_url" [alt]="pokemon.name" class="w-48 h-48">
             </div>
         </div>
 
-        <!-- Numéro du Pokémon à droite -->
-        <h2 class="header-title pokemon-id text-white">
-            #{{ pokemon.id.toString().padStart(4, '0') }}
-        </h2>
-    </div>
 
-
-    <!-- Types du Pokémon en dessous du nom -->
-
-
-    <!-- Image du Pokémon au centre -->
-    <div class="pokemon-image-container absolute inset-0 flex justify-center items-center">
-        <img [src]="pokemon.default_variety.sprites?.artwork_url" [alt]="pokemon.name" class="pokemon-image z-0">
-    </div>
-</div>
-
-<!-- Section principale : détails du Pokémon -->
-<div class="main-container flex flex-col items-center gap-4 mt-6">
-    <!-- Taille et poids -->
-    <div class="pokemon-info text-center">
-        <p>Taille : {{ pokemon.default_variety.height / 10 }} m</p>
-        <p>Poids : {{ pokemon.default_variety.weight / 10 }} kg</p>
-    </div>
-
-    <!-- Bouton pour jouer le cri -->
-    <button (click)="playCry(pokemon.default_variety.cry_url)" class="cry-btn" [ngStyle]="{ 
-            'border-color': getTypeColor(pokemon), 
-            'color': getTypeColor(pokemon) 
-        }">
-        <fa-icon [icon]="fa.faVolumeLow" class="text-2xl" [ngStyle]="{ 'color': getTypeColor(pokemon) }">
-        </fa-icon>
-    </button>
-
-</div>
-
-<div class="pokemon-moves mt-8 p-6 bg-gray-100 rounded-lg shadow-lg">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4">Moves THIS IS BROKEN NEED TO FIX SOON</h2>
-    <ul class="space-y-2">
-        <li *ngFor="let move of pokemonMoves" class="flex items-center bg-white p-4 rounded-lg shadow-md">
-            <div
-                class="flex-shrink-0 w-10 h-10 rounded-full bg-gray-200 text-white flex items-center justify-center mr-4">
-                <img [src]="moveIcons[move.type_id]" alt="Move Icon" class="w-6 h-6">
+        <!-- Description -->
+        <div class="pokemon-description p-6 bg-amber-50 rounded-lg shadow-lg">
+            @if(pokemon.default_variety.types){
+            <app-type-badge [types]="pokemon.default_variety.types" [showDetailed]="true"></app-type-badge>
+            }
+            <div class="flex justify-center  mt-2">
+                <h1 class="text-xl font-bold mb-2">{{pokemon.category}}</h1>
             </div>
-            <span class="text-lg font-medium text-gray-900">{{ move.name[3].name }}</span>
-        </li>
-    </ul>
+
+            <div class="flex justify-center">
+                <h2 class="text-xl font-bold mb-2">Description</h2>
+            </div>
+            <p>
+                {{pokemon.default_variety.description}}
+            </p>
+        </div>
+    </div>
+
+    <!-- Colonne milieu : Statistiques et Faiblesses -->
+    <div class="pokemon-stats p-6 bg-amber-50 rounded-lg shadow-lg">
+        <h2 class="text-xl font-bold mb-4">Statistiques de base</h2>
+        <!-- Liste des statistiques avec barres de progression -->
+        <ul>
+            <li class="mb-6">
+                <div class="flex justify-between">
+                    <span class="font-medium text-lg">PV</span>
+                    <span class="font-medium text-lg">{{ pokemon.default_variety.base_stat_hp }}</span>
+                </div>
+                <div class="w-full h-4 bg-white rounded-full">
+                    <div class="h-4 bg-green-400 rounded-full"
+                        [ngStyle]="{ 'width': (pokemon.default_variety.base_stat_hp / 200 * 100) + '%' }">
+                    </div>
+                </div>
+            </li>
+            <li class="mb-6">
+                <div class="flex justify-between">
+                    <span class="font-medium text-lg">Attaque</span>
+                    <span class="font-medium text-lg">{{ pokemon.default_variety.base_stat_attack }}</span>
+                </div>
+                <div class="w-full h-4 bg-white rounded-full">
+                    <div class="h-4 bg-green-400 rounded-full"
+                        [ngStyle]="{ 'width': (pokemon.default_variety.base_stat_attack / 200 * 100) + '%' }">
+                    </div>
+                </div>
+            </li>
+            <li class="mb-6">
+                <div class="flex justify-between">
+                    <span class="font-medium text-lg">Défense</span>
+                    <span class="font-medium text-lg">{{ pokemon.default_variety.base_stat_defense }}</span>
+                </div>
+                <div class="w-full h-4 bg-white rounded-full">
+                    <div class="h-4 bg-green-400 rounded-full"
+                        [ngStyle]="{ 'width': (pokemon.default_variety.base_stat_defense / 200 * 100) + '%' }">
+                    </div>
+                </div>
+            </li>
+            <li class="mb-6">
+                <div class="flex justify-between">
+                    <span class="font-medium text-lg">Attaque Spéciale</span>
+                    <span class="font-medium text-lg">{{ pokemon.default_variety.base_stat_special_attack }}</span>
+                </div>
+                <div class="w-full h-4 bg-white rounded-full">
+                    <div class="h-4 bg-green-400 rounded-full"
+                        [ngStyle]="{ 'width': (pokemon.default_variety.base_stat_special_attack / 200 * 100) + '%' }">
+                    </div>
+                </div>
+            </li>
+            <li class="mb-6">
+                <div class="flex justify-between">
+                    <span class="font-medium text-lg">Défense Spéciale</span>
+                    <span class="font-medium text-lg">{{ pokemon.default_variety.base_stat_special_defense }}</span>
+                </div>
+                <div class="w-full h-4 bg-white rounded-full">
+                    <div class="h-4 bg-green-400 rounded-full"
+                        [ngStyle]="{ 'width': (pokemon.default_variety.base_stat_special_defense / 200 * 100) + '%' }">
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="flex justify-between">
+                    <span class="font-medium text-lg">Vitesse</span>
+                    <span class="font-medium text-lg">{{ pokemon.default_variety.base_stat_speed }}</span>
+                </div>
+                <div class="w-full h-4 bg-white rounded-full">
+                    <div class="h-4 bg-green-400 rounded-full"
+                        [ngStyle]="{ 'width': (pokemon.default_variety.base_stat_speed / 200 * 100) + '%' }">
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+    <!-- Colonne droite : Talents et Attaques -->
+    <div class="col-span-1 flex flex-col gap-6">
+        <!-- Talents -->
+        <div class="pokemon-abilities p-6 bg-amber-50 rounded-lg shadow-lg">
+            <h2 class="text-xl font-bold mb-4">Talents</h2>
+            <ul>
+                <!-- <li *ngFor="let ability of pokemon.abilities"> -->
+                <!-- {{ ability.name }} <span *ngIf="ability.hidden">(Caché)</span> -->
+                <!-- </li> -->
+            </ul>
+        </div>
+
+        <!-- Attaques -->
+        <div class="pokemon-moves p-6 bg-amber-50 rounded-lg shadow-lg">
+            <h2 class="text-xl font-bold mb-4">Attaques</h2>
+            <ul class="space-y-2">
+                <li *ngFor="let move of pokemonMoves" class="flex items-center">
+                    <img [src]="moveIcons[move.infos[0].move_damage_class_id]" alt="Move Icon" class="w-6 h-6 mr-2">
+                    <span>{{ move.name[3].name }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
-
-
-<!-- Audio player -->
-<audio #audioPlayer></audio>
 }

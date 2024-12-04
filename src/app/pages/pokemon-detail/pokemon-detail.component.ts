@@ -15,6 +15,7 @@ export class PokemonDetailComponent {
 
   pokemon!: Pokemon;
   pokemonMoves: any[] = [];  // Pour stocker les moves du Pokémon
+  pokemonEvolutionChain: any[] = []; // Pour stocker la chaîne d'évolution
 
   fa = {
     faChevronLeft,
@@ -31,32 +32,36 @@ export class PokemonDetailComponent {
     private apiService: ApiService,
     private route: ActivatedRoute
   ) {
-    // Récupération de l'identifiant du Pokémon dans l'URL
     this.route.params.subscribe(params => {
       if (params['pokemon_id']) {
-        // Appel de l'API pour récupérer les informations du Pokémon
+        // Charger les informations du Pokémon
         this.apiService.requestApi(`/pokemon/${params['pokemon_id']}`)
           .then((response: Pokemon) => {
             this.pokemon = response;
           });
 
-        // Appel pour récupérer les moves du Pokémon
+        // Charger les moves du Pokémon
         this.apiService.requestApi(`/pokemon/${params['pokemon_id']}/moves`)
           .then((response: any) => {
-            const moveIds = response.moves.map((move: any) => move.move_id); // Récupère les IDs des moves
-
-            // Pour chaque move, on appelle la route pour récupérer les informations détaillées
+            const moveIds = response.moves.map((move: any) => move.move_id);
             moveIds.forEach((moveId: number) => {
               this.apiService.requestApi(`/move/${moveId}/infos`)
                 .then((moveInfo: any) => {
-                  this.pokemonMoves.push(moveInfo);  // Ajoute les informations du move à la liste
-                  console.log(moveInfo)
+                  this.pokemonMoves.push(moveInfo);
                 });
             });
+          });
+
+        // Charger la chaîne d'évolution du Pokémon
+        this.apiService.requestApi(`/pokemon/${params['pokemon_id']}/chain`)
+          .then((response: any) => {
+            this.pokemonEvolutionChain = response.evolution_chain;
+            console.log(this.pokemonEvolutionChain)
           });
       }
     });
   }
+
 
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
   playCry(cryUrl: string | undefined) {

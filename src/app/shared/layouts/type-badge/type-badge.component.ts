@@ -8,4 +8,5 @@ import { Type } from "../../interfaces/type";
 })
 export class TypeBadgeComponent {
   @Input() types!: Type[];
+  @Input() showDetailed: boolean = false; // Définit quel affichage utiliser
 }

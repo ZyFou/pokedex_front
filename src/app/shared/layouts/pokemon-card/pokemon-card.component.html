@@ -10,7 +10,7 @@
         <p class="font-bold">{{ pokemon.name }}</p>
         <div class="flex">
             @if(pokemon.default_variety.types){
-            <app-type-badge [types]="pokemon.default_variety.types"></app-type-badge>
+            <app-type-badge [types]="pokemon.default_variety.types" [showDetailed]="false"></app-type-badge>
             }
         </div>
     </div>
